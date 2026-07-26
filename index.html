@@ -1,11 +1,118 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>Takashi Nishimura</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tkc-works</title>
+<meta name="description" content="tkc-works の公式サイト。個人開発でリリースしているアプリの一覧です。">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #666666;
+    --border: #e5e5e5;
+    --accent: #2b6cb0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121212;
+      --fg: #f0f0f0;
+      --muted: #a0a0a0;
+      --border: #2a2a2a;
+      --accent: #6ea8ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif;
+    line-height: 1.6;
+  }
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 8px;
+    letter-spacing: 0.02em;
+  }
+  .tagline {
+    color: var(--muted);
+    margin: 0 0 48px;
+    font-size: 0.95rem;
+  }
+  h2 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 16px;
+  }
+  .app-card {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease;
+  }
+  .app-card:hover {
+    border-color: var(--accent);
+  }
+  .app-card img {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    flex-shrink: 0;
+  }
+  .app-info h3 {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+  }
+  .app-info p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .more-note {
+    margin-top: 24px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+</style>
 </head>
 <body>
-  <p>This is the developer website for apps by Takashi Nishimura.</p>
+<main>
+  <h1>tkc-works</h1>
+  <p class="tagline">個人でアプリ開発をしています。</p>
+
+  <h2>Apps</h2>
+  <a class="app-card" href="https://apps.apple.com/jp/app/%E3%81%97%E3%81%AE%E3%81%B0%E3%81%9B%E3%83%88%E3%83%BC%E3%82%AF/id6791850235">
+    <img src="assets/shinobase-talk-icon.png" alt="しのばせトーク アイコン" width="64" height="64">
+    <div class="app-info">
+      <h3>しのばせトーク</h3>
+      <p>スマホ1台で遊べる、言葉当てパーティーゲーム</p>
+    </div>
+  </a>
+  <p class="more-note">今後もアプリを追加予定です。</p>
+
+  <footer>&copy; 2026 Takashi Nishimura</footer>
+</main>
 </body>
 </html>
