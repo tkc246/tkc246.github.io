@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>tkc-works</title>
-<meta name="description" content="tkc-works の公式サイト。個人開発でリリースしているアプリの一覧です。">
+<meta name="description" content="tkc-works がリリースしているアプリの一覧です。">
 <style>
   :root {
     --bg: #ffffff;
@@ -55,18 +55,23 @@
     margin: 0 0 16px;
   }
   .app-card {
-    display: flex;
-    gap: 16px;
-    align-items: center;
     padding: 16px;
     border: 1px solid var(--border);
     border-radius: 12px;
+    margin-bottom: 16px;
+  }
+  .app-card-link {
+    display: flex;
+    gap: 16px;
+    align-items: center;
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.15s ease;
   }
-  .app-card:hover {
-    border-color: var(--accent);
+  .app-card-link.is-pending {
+    cursor: default;
+  }
+  .app-card-link:not(.is-pending):hover .app-info h3 {
+    color: var(--accent);
   }
   .app-card img {
     width: 64px;
@@ -82,6 +87,32 @@
     margin: 0;
     color: var(--muted);
     font-size: 0.9rem;
+  }
+  .badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--border);
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+  .app-links {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .app-links a {
+    color: var(--accent);
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  .app-links a:hover {
+    text-decoration: underline;
   }
   .more-note {
     margin-top: 24px;
@@ -100,16 +131,38 @@
 <body>
 <main>
   <h1>tkc-works</h1>
-  <p class="tagline">個人でアプリ開発をしています。</p>
+  <p class="tagline">オリジナルのスマホアプリを開発・運営しています。</p>
 
   <h2>Apps</h2>
-  <a class="app-card" href="https://apps.apple.com/jp/app/%E3%81%97%E3%81%AE%E3%81%B0%E3%81%9B%E3%83%88%E3%83%BC%E3%82%AF/id6791850235">
-    <img src="assets/shinobase-talk-icon.png" alt="しのばせトーク アイコン" width="64" height="64">
-    <div class="app-info">
-      <h3>しのばせトーク</h3>
-      <p>スマホ1台で遊べる、言葉当てパーティーゲーム</p>
+
+  <div class="app-card">
+    <a class="app-card-link" href="https://apps.apple.com/jp/app/%E3%81%97%E3%81%AE%E3%81%B0%E3%81%9B%E3%83%88%E3%83%BC%E3%82%AF/id6791850235">
+      <img src="assets/shinobase-talk-icon.png" alt="しのばせトーク アイコン" width="64" height="64">
+      <div class="app-info">
+        <h3>しのばせトーク</h3>
+        <p>スマホ1台で遊べる、言葉当てパーティーゲーム</p>
+      </div>
+    </a>
+    <div class="app-links">
+      <a href="shinobase-talk-pages/privacy-policy.html">プライバシーポリシー</a>
+      <a href="shinobase-talk-pages/support.html">サポート</a>
     </div>
-  </a>
+  </div>
+
+  <div class="app-card">
+    <div class="app-card-link is-pending">
+      <img src="assets/oekaki-tanteidan-icon.png" alt="おえかき探偵団 アイコン" width="64" height="64">
+      <div class="app-info">
+        <h3>おえかき探偵団<span class="badge">近日公開</span></h3>
+        <p>お題の絵を描いて、みんなで正体を推理する協力型パーティーゲーム</p>
+      </div>
+    </div>
+    <div class="app-links">
+      <a href="oekaki-tanteidan-pages/privacy-policy.html">プライバシーポリシー</a>
+      <a href="oekaki-tanteidan-pages/support.html">サポート</a>
+    </div>
+  </div>
+
   <p class="more-note">今後もアプリを追加予定です。</p>
 
   <footer>&copy; 2026 tkc-works</footer>
