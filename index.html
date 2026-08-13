@@ -5,64 +5,88 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>tkc-works</title>
 <meta name="description" content="tkc-works がリリースしているアプリの一覧です。">
+<meta name="theme-color" content="#FAF6EE">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #ffffff;
-    --fg: #1a1a1a;
-    --muted: #666666;
-    --border: #e5e5e5;
-    --accent: #2b6cb0;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #121212;
-      --fg: #f0f0f0;
-      --muted: #a0a0a0;
-      --border: #2a2a2a;
-      --accent: #6ea8ff;
-    }
+    color-scheme: light;
+    --bg: #FAF6EC;
+    --bg-elevated: #FFFFFF;
+    --fg: #2B2118;
+    --muted: #7C7060;
+    --border: #E7DEC8;
+    --accent: #B8481E;
+    --accent-fg: #FFF7EE;
+    --ring: rgba(184, 72, 30, 0.14);
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--bg);
+    background:
+      radial-gradient(720px 420px at 85% -10%, var(--ring), transparent 60%),
+      var(--bg);
     color: var(--fg);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif;
-    line-height: 1.6;
+    font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
   }
   main {
     max-width: 640px;
     margin: 0 auto;
-    padding: 64px 24px 96px;
+    padding: 88px 24px 96px;
+  }
+  .brand-plate {
+    display: block;
+    margin: 0 0 24px;
+  }
+  .brand-plate img {
+    display: block;
+    height: 40px;
+    width: auto;
   }
   h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0 0 8px;
-    letter-spacing: 0.02em;
+    margin: 0;
   }
   .tagline {
     color: var(--muted);
-    margin: 0 0 48px;
-    font-size: 0.95rem;
+    margin: 0 0 56px;
+    font-size: 1rem;
   }
   h2 {
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.78rem;
+    font-weight: 700;
     color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin: 0 0 16px;
+    letter-spacing: 0.14em;
+    margin: 0 0 18px;
+  }
+  .apps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
   .app-card {
-    padding: 16px;
+    background: var(--bg-elevated);
+    padding: 20px;
     border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 16px;
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+  .app-card:has(.app-card-link:not(.is-pending):hover) {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: 0 14px 28px -14px rgba(0,0,0,0.22);
   }
   .app-card-link {
     display: flex;
-    gap: 16px;
+    gap: 18px;
     align-items: center;
     text-decoration: none;
     color: inherit;
@@ -70,102 +94,156 @@
   .app-card-link.is-pending {
     cursor: default;
   }
-  .app-card-link:not(.is-pending):hover .app-info h3 {
-    color: var(--accent);
-  }
   .app-card img {
-    width: 64px;
-    height: 64px;
-    border-radius: 14px;
+    width: 68px;
+    height: 68px;
+    border-radius: 16px;
     flex-shrink: 0;
+    box-shadow: 0 4px 14px -6px rgba(0,0,0,0.25);
   }
   .app-info h3 {
-    margin: 0 0 4px;
-    font-size: 1.05rem;
+    margin: 0 0 5px;
+    font-size: 1.12rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   .app-info p {
     margin: 0;
     color: var(--muted);
     font-size: 0.9rem;
   }
+  .go {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: var(--muted);
+    font-size: 1.2rem;
+    transition: transform 0.18s ease, color 0.18s ease;
+  }
+  .app-card-link:not(.is-pending):hover .go {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
   .badge {
     display: inline-block;
-    margin-left: 8px;
-    padding: 2px 8px;
+    padding: 2px 9px;
     border-radius: 999px;
-    background: var(--border);
-    color: var(--muted);
-    font-size: 0.7rem;
-    font-weight: 600;
-    vertical-align: middle;
+    background: var(--ring);
+    color: var(--accent);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
   }
   .app-links {
     display: flex;
-    gap: 16px;
-    margin-top: 12px;
-    padding-top: 12px;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 14px;
     border-top: 1px solid var(--border);
   }
   .app-links a {
-    color: var(--accent);
-    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.78rem;
     text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .app-links a svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
   }
   .app-links a:hover {
-    text-decoration: underline;
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--ring);
   }
   .more-note {
-    margin-top: 24px;
+    margin-top: 28px;
     color: var(--muted);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
   footer {
-    margin-top: 80px;
-    padding-top: 24px;
+    margin-top: 88px;
+    padding-top: 28px;
     border-top: 1px solid var(--border);
     color: var(--muted);
-    font-size: 0.8rem;
+    font-size: 0.82rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  footer a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  footer a svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+  footer a:hover {
+    color: var(--accent);
+    text-decoration: underline;
   }
 </style>
 </head>
 <body>
 <main>
-  <h1>tkc-works</h1>
-  <p class="tagline">オリジナルのスマホアプリを開発・運営しています。</p>
+  <h1 class="brand-plate"><img src="assets/logo.png" alt="tkc-works" height="32"></h1>
+  <p class="tagline">モバイルアプリを開発・運営しています。</p>
 
   <h2>Apps</h2>
 
-  <div class="app-card">
-    <a class="app-card-link" href="https://apps.apple.com/jp/app/%E3%81%97%E3%81%AE%E3%81%B0%E3%81%9B%E3%83%88%E3%83%BC%E3%82%AF/id6791850235">
-      <img src="assets/shinobase-talk-icon.png" alt="しのばせトーク アイコン" width="64" height="64">
-      <div class="app-info">
-        <h3>しのばせトーク</h3>
-        <p>スマホ1台で遊べる、言葉当てパーティーゲーム</p>
+  <div class="apps">
+    <div class="app-card">
+      <a class="app-card-link" href="https://apps.apple.com/jp/app/%E3%81%97%E3%81%AE%E3%81%B0%E3%81%9B%E3%83%88%E3%83%BC%E3%82%AF/id6791850235">
+        <img src="assets/shinobase-talk-icon.png" alt="しのばせトーク アイコン" width="68" height="68">
+        <div class="app-info">
+          <h3>しのばせトーク</h3>
+          <p>スマホ1台で遊べる、言葉当てパーティーゲーム</p>
+        </div>
+        <span class="go">›</span>
+      </a>
+      <div class="app-links">
+        <a href="shinobase-talk-pages/privacy-policy.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>プライバシーポリシー</a>
+        <a href="shinobase-talk-pages/support.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>サポート</a>
       </div>
-    </a>
-    <div class="app-links">
-      <a href="shinobase-talk-pages/privacy-policy.html">プライバシーポリシー</a>
-      <a href="shinobase-talk-pages/support.html">サポート</a>
     </div>
-  </div>
 
-  <div class="app-card">
-    <div class="app-card-link is-pending">
-      <img src="assets/oekaki-tanteidan-icon.png" alt="おえかき探偵団 アイコン" width="64" height="64">
-      <div class="app-info">
-        <h3>おえかき探偵団<span class="badge">近日公開</span></h3>
-        <p>ヒントを頼りに絵を描いて、みんなでお題を推理する新感覚パーティーゲーム</p>
+    <div class="app-card">
+      <div class="app-card-link is-pending">
+        <img src="assets/oekaki-tanteidan-icon.png" alt="おえかき探偵団 アイコン" width="68" height="68">
+        <div class="app-info">
+          <h3>おえかき探偵団<span class="badge">近日公開</span></h3>
+          <p>ヒントを頼りに絵を描いて、みんなでお題を推理する新感覚パーティーゲーム</p>
+        </div>
       </div>
-    </div>
-    <div class="app-links">
-      <a href="oekaki-tanteidan-pages/privacy-policy.html">プライバシーポリシー</a>
-      <a href="oekaki-tanteidan-pages/support.html">サポート</a>
+      <div class="app-links">
+        <a href="oekaki-tanteidan-pages/privacy-policy.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>プライバシーポリシー</a>
+        <a href="oekaki-tanteidan-pages/support.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>サポート</a>
+      </div>
     </div>
   </div>
 
   <p class="more-note">今後もアプリを追加予定です。</p>
 
-  <footer>&copy; 2026 tkc-works</footer>
+  <footer>
+    <span>&copy; 2026 tkc-works</span>
+    <a href="mailto:info@tkc-works.net" aria-label="info@tkc-works.net 宛にメール" title="info@tkc-works.net"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></a>
+  </footer>
 </main>
 </body>
 </html>
