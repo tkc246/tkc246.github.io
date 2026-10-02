@@ -218,7 +218,7 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
   @keyframes grow { from { transform: scaleX(0); } }
   .wordmark {
     margin: 0; font-family: var(--font-en); font-weight: 900;
-    font-size: clamp(3.4rem, 8.4vw, 8.6rem); line-height: .92; letter-spacing: -0.05em;
+    font-size: var(--wm); line-height: .92; letter-spacing: -0.05em;
     display: flex; flex-wrap: nowrap; white-space: nowrap; padding: .12em 0;
   }
   .wordmark .ch { display: inline-block; overflow: hidden; padding: .12em .14em; margin: -.12em -.14em; margin-right: calc(-.14em - .05em); letter-spacing: 0; }
@@ -229,8 +229,10 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
   }
   .wordmark .hy > span { color: var(--lamp); text-shadow: 0 0 30px rgba(255, 200, 121, .45); }
   @keyframes rise { to { transform: none; } }
+  .hero-copy { --wm: clamp(3.4rem, 8.4vw, 8.6rem); }
+  /* subtitle sits tight under the wordmark, like a lockup */
   .catch {
-    margin: 30px 0 0; font-weight: 700; font-size: clamp(1.15rem, 2.2vw, 1.7rem); letter-spacing: .12em;
+    margin: calc(var(--wm) * .06) 0 0; padding-left: .1em; font-weight: 700; font-size: max(1.05rem, calc(var(--wm) * .2)); letter-spacing: .12em;
   }
   .catch .c { display: inline-block; opacity: 0; filter: blur(8px); transform: translateY(.4em);
     animation: inChar .8s var(--ease-out) forwards; animation-delay: calc(1s + var(--i) * .045s); }
