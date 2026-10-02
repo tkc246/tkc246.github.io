@@ -1,6 +1,6 @@
 # tkc-works Showreel 2026
 
-15秒 / 1920×1080 / 60fps のショーリール。完成版は `tkc-works_showreel_2026.mp4`。
+15秒 / 1920×1080 / 60fps のショーリール（アトリエ版：リニューアル後の tkc-works.net の世界観に合わせたもの）。完成版は `tkc-works_showreel_2026.mp4`。
 
 映像は Canvas 2D（`reel.js`）、音楽は Node でのコード生成（`audio.cjs`）。どちらも時間だけで決まるので、同じ入力からは毎回同じ動画が出ます。
 

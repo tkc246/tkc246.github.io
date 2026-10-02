@@ -73,6 +73,7 @@ const scratch = (t0, len, g = 1) => put(t0, len, (t, st) => {
 const B = .5; // beat
 // INTRO
 pluck(0, 81, 1.2); pluck(0, 69, .8); kick(0, .6);
+[.125, .25, .375].forEach(t => tick(t, .6, 0, 900)); // bulb flicker
 for (let k = 0; k < 3; k++) put(.03 + k * .1, 1.2, (t, st) => { st.p = (st.p || 0) + (1760 + k * 220) / SR; return Math.sin(TAU * st.p) * Math.exp(-t * 4) * .2; }, { pan: k - 1, send: .8 });
 whoosh(.3, .32, .8, true); tick(.5, 1.4, 0, 1200);
 for (let i = 0; i < 6; i++) tick(.55 + i * .045, .8, -.5 + i * .2, 2200 + i * 150);
@@ -108,8 +109,9 @@ kick(8.58, .5); chip(8.58, .08, 140, 80, 1);   // land
 chip(9.12, .28, 330, 990, .9); chip(9.5, .08, 160, 90, .8);
 for (let i = 0; i < 12; i++) chip(8.2 + i * .14, .04, 1400 + (i % 3) * 300, 1600, .25); // altimeter
 whoosh(9.68, .45, 1.3, true); boom(10.1, .35);
-for (let k = 0; k < 6; k++) tick(10.25 + k * .27 + .15, 1, .4, 2600); // reel clicks
-put(10.72, 1.0, (t, st) => { const x = t; const f = 300 + 900 * (1 / (1 + Math.exp(-(x - .5) * 14))); st.p = (st.p || 0) + f / SR; return Math.sin(TAU * st.p) * .12 * Math.sin(Math.PI * x); }, { send: .4 }); // curve follower
+// atelier: a soft pluck as each word of the statement lights up, then the count-up
+[69, 72, 76, 79, 81, 84, 79, 88].forEach((m, i) => pluck(10.15 + i * .14, m, .45, (i % 2 ? .35 : -.35)));
+for (let i = 0; i < 10; i++) tick(10.9 + i * .07, .35, (i % 3 - 1) * .4, 2400 + i * 60);
 // collapse → silence suck → end
 whoosh(11.75, .62, 1.2, false);
 put(11.9, .45, (t, st) => { const x = t / .45; st.p = (st.p || 0) + (800 * Math.pow(.1, x)) / SR; return Math.sin(TAU * st.p) * .3 * x; }, { send: .5 });
