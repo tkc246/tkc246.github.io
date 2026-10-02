@@ -1,0 +1,32 @@
+<!doctype html><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&display=block" rel="stylesheet">
+<body style="background:#777;margin:0">
+<script>
+function draw(size, { radius = true } = {}) {
+  const S = 1024, c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d');
+  if (radius) { g.beginPath(); g.roundRect(0, 0, S, S, S * .225); g.clip(); }
+  const bg = g.createLinearGradient(0, 0, 0, S); bg.addColorStop(0, '#3D3934'); bg.addColorStop(1, '#201E1A');
+  g.fillStyle = bg; g.fillRect(0, 0, S, S);
+  const lamp = g.createRadialGradient(S * .5, S * .02, 0, S * .5, S * .02, S * .75);
+  lamp.addColorStop(0, 'rgba(255,200,121,.30)'); lamp.addColorStop(1, 'rgba(255,200,121,0)');
+  g.fillStyle = lamp; g.fillRect(0, 0, S, S);
+  // wordmark
+  const fs = size <= 32 ? 540 : 420;
+  g.font = `900 ${fs}px "Outfit"`; g.letterSpacing = `${size <= 32 ? fs * .02 : fs * .005}px`; g.textBaseline = 'alphabetic';
+  const tw = g.measureText('tkc').width, dot = fs * .17, gap = fs * .03;
+  const total = tw + gap + dot, x = (S - total) / 2, base = S * .5 + fs * .36;
+  g.fillStyle = '#F6F0E6'; g.fillText('tkc', x, base);
+  // lamp dot
+  const dx = x + tw + gap + dot / 2, dy = base - dot / 2;
+  g.save(); g.shadowColor = 'rgba(255,190,100,.9)'; g.shadowBlur = fs * .25;
+  g.fillStyle = '#FFC879'; g.beginPath(); g.arc(dx, dy, dot / 2, 0, 6.283); g.fill(); g.restore();
+  // downscale in halving steps for crisp small sizes
+  let src = c, cur = S;
+  while (cur / 2 >= size) { const n = document.createElement('canvas'); n.width = n.height = cur / 2;
+    const ng = n.getContext('2d'); ng.imageSmoothingQuality = 'high'; ng.drawImage(src, 0, 0, cur / 2, cur / 2); src = n; cur /= 2; }
+  if (cur !== size) { const n = document.createElement('canvas'); n.width = n.height = size; const ng = n.getContext('2d'); ng.imageSmoothingQuality = 'high'; ng.drawImage(src, 0, 0, size, size); src = n; }
+  return src.toDataURL('image/png');
+}
+window.make = async () => { await document.fonts.load('900 100px "Outfit"', 'tkc'); return {
+  'favicon-16.png': draw(16), 'favicon-32.png': draw(32), 'icon-512.png': draw(512), 'apple-touch-icon.png': draw(180, { radius: false }), 'preview-1024.png': draw(1024) }; };
+</script>
