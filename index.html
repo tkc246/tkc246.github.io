@@ -102,7 +102,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;800;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
-<script>document.documentElement.classList.add('js')</script>
+<script>
+document.documentElement.classList.add('js');
+try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('intro'); } catch (e) {}
+</script>
 <style>
   :root {
     color-scheme: dark;
@@ -429,6 +432,62 @@
   footer a { text-decoration: none; transition: color .3s; }
   footer a:hover { color: var(--lamp); }
 
+  /* ── opening (first visit) ── */
+  #intro { display: none; position: fixed; inset: 0; z-index: 200; background: #161411; transition: opacity .45s var(--ease-out); }
+  html.intro #intro { display: block; }
+  html.intro body { overflow: hidden; }
+  html.intro .wordmark .ch > span, html.intro .catch .c, html.intro .lead, html.intro .cta,
+  html.intro .hero-visual, html.intro .eyebrow .rule { animation-play-state: paused; }
+  #intro canvas { display: block; width: 100%; height: 100%; }
+  #intro .skip {
+    position: absolute; right: calc(24px + env(safe-area-inset-right, 0px)); bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px; cursor: pointer;
+    font-family: var(--font-en); font-weight: 600; font-size: .74rem; letter-spacing: .24em; color: var(--muted);
+    background: rgba(31, 29, 26, .6); border: 1px solid var(--line); transition: color .3s, border-color .3s;
+  }
+  #intro .skip:hover, #intro .skip:focus-visible { color: var(--lamp); border-color: var(--lamp); outline: none; }
+
+  /* ── showreel ── */
+  .monitor { margin: 0; position: relative; }
+  .monitor::before {
+    content: ""; position: absolute; inset: -12% -6%; z-index: -1; pointer-events: none;
+    background: radial-gradient(50% 50% at 50% 42%, rgba(255, 200, 121, .13), transparent 70%);
+  }
+  .screen {
+    position: relative; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 22px; overflow: hidden; background: #0E0D0B;
+    box-shadow: 0 0 0 10px #1A1815, 0 0 0 11px rgba(255, 236, 210, .1), 0 50px 90px -30px rgba(0, 0, 0, .85);
+  }
+  .screen video { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .screen::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+    background: linear-gradient(118deg, rgba(255, 255, 255, .07), transparent 38%);
+  }
+  .play {
+    position: absolute; left: 50%; bottom: clamp(14px, 4%, 30px); transform: translateX(-50%); z-index: 2;
+    display: inline-flex; align-items: center; gap: 12px; padding: 9px 20px 9px 9px; border-radius: 999px; cursor: pointer;
+    background: rgba(31, 29, 26, .74); border: 1px solid var(--line); color: var(--fg);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    font-family: var(--font-jp); font-weight: 700; font-size: .9rem; letter-spacing: .04em; white-space: nowrap;
+    transition: border-color .3s, opacity .4s, transform .4s var(--ease-out);
+  }
+  .play .ic { width: 38px; height: 38px; border-radius: 50%; background: var(--lamp); color: var(--bg-deep); display: grid; place-items: center; box-shadow: 0 0 22px rgba(255, 200, 121, .5); }
+  .play .ic svg { width: 15px; height: 15px; margin-left: 2px; }
+  .play small { font-family: var(--font-en); font-weight: 500; color: var(--dim); letter-spacing: .12em; }
+  .play:hover, .play:focus-visible { border-color: var(--lamp); outline: none; transform: translateX(-50%) translateY(-2px); }
+  .screen.sound .play { opacity: 0; pointer-events: none; }
+  .monitor figcaption {
+    display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 38px;
+    font-family: var(--font-en); font-size: .72rem; letter-spacing: .24em; color: var(--dim);
+  }
+  .plate-sm {
+    padding: 4px 10px; border-radius: 5px; color: #2A2216; font-weight: 800; letter-spacing: .04em; font-size: .78rem;
+    background: linear-gradient(135deg, #EBD198, var(--brass) 45%, var(--brass-deep));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 6px 14px -6px rgba(0,0,0,.7);
+  }
+  .replay { background: none; border: 0; padding: 0; cursor: pointer; color: inherit; font: inherit; letter-spacing: inherit; transition: color .3s; }
+  .replay:hover, .replay:focus-visible { color: var(--lamp); outline: none; }
+  .foot-links { display: flex; gap: 24px; flex-wrap: wrap; }
+
   /* ── responsive ── */
   @media (max-width: 960px) {
     .hero { grid-template-columns: 1fr; padding-top: 104px; text-align: left; min-height: auto; }
@@ -446,6 +505,8 @@
     .tag-float.t1 { left: 0; }
     .stats { grid-template-columns: 1fr 1fr 1fr; }
     .stat { padding: 18px 12px; }
+    .play { font-size: .8rem; gap: 9px; padding: 6px 14px 6px 6px; }
+    .play .ic { width: 30px; height: 30px; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
@@ -455,6 +516,7 @@
 </style>
 </head>
 <body>
+<div id="intro"><canvas aria-hidden="true"></canvas><button class="skip" type="button" tabindex="0">SKIP ›</button></div>
 <div class="ambient" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 <div class="progress" aria-hidden="true"></div>
@@ -463,6 +525,7 @@
   <a class="brand" href="#top" aria-label="tkc-works トップへ">tkc<span class="hy">-</span>works</a>
   <nav aria-label="メイン">
     <ul>
+      <li><a class="link" href="#showreel">Reel</a></li>
       <li><a class="link" href="#apps">Apps</a></li>
       <li><a class="link" href="#about">About</a></li>
       <li><a class="link" href="#contact">Contact</a></li>
@@ -511,6 +574,23 @@
       <span><span class="jp">つくることで、もっと楽しく。</span></span><span>APP DEVELOPMENT</span><span class="o">iOS / ANDROID</span><span>PARTY GAMES</span>
     </div>
   </div>
+
+  <section class="block" id="showreel">
+    <div class="sec-head">
+      <div>
+        <p class="sec-label reveal">ON SCREEN</p>
+        <h2 class="sec-title reveal" style="--d:1">Showreel</h2>
+      </div>
+      <p class="sec-note reveal" style="--d:2">アトリエの空気を、15秒で。ボタンを押すと、音ありで最初から再生します。</p>
+    </div>
+    <figure class="monitor reveal">
+      <div class="screen" id="screen">
+        <video id="reel" poster="assets/showreel-poster.jpg" muted loop playsinline preload="none" width="1280" height="720" aria-label="tkc-works ショーリール（15秒）"><source src="assets/showreel.mp4" type="video/mp4"><source src="assets/showreel.webm" type="video/webm"></video>
+        <button class="play" id="reelPlay" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></span>音ありで再生<small>0:15</small></button>
+      </div>
+      <figcaption><span class="plate-sm">tkc-works</span>SHOWREEL 2026 · 0:15</figcaption>
+    </figure>
+  </section>
 
   <section class="block" id="apps">
     <div class="sec-head">
@@ -590,7 +670,7 @@
 
 <footer>
   <span>&copy; 2026 tkc-works</span>
-  <a href="#top">BACK TO TOP ↑</a>
+  <span class="foot-links"><button class="replay" id="replay" type="button">▶ OPENING</button><a href="#top">BACK TO TOP ↑</a></span>
 </footer>
 
 <script>
@@ -722,6 +802,105 @@
     card.classList.remove('arrive'); void card.offsetWidth;
     setTimeout(() => card.classList.add('arrive'), reduce ? 0 : 450);
   }));
+  // showreel: plays muted while on screen; the button restarts it with sound
+  const reel = document.getElementById('reel'), screen = document.getElementById('screen');
+  const reelIO = new IntersectionObserver(es => es.forEach(e => {
+    if (screen.classList.contains('sound')) return;
+    if (e.isIntersecting && !reduce) reel.play().catch(() => {}); else reel.pause();
+  }), { threshold: .35 });
+  reelIO.observe(reel);
+  document.getElementById('reelPlay').addEventListener('click', () => {
+    screen.classList.add('sound');
+    reel.loop = false; reel.muted = false; reel.controls = true; reel.currentTime = 0;
+    reel.play().catch(() => {});
+  });
+  reel.addEventListener('ended', () => {
+    if (!screen.classList.contains('sound')) return;
+    screen.classList.remove('sound'); reel.controls = false; reel.muted = true; reel.loop = true;
+    reel.play().catch(() => {});
+  });
+
+  // opening: the lamp catches, its light becomes the hyphen of tkc-works, then the site appears
+  const intro = document.getElementById('intro');
+  function playIntro() {
+    const ic = intro.querySelector('canvas'), g = ic.getContext('2d');
+    let start = null, done = false, raf;
+    const D = 1.95, cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), Pt = (t, a, b) => cl((t - a) / (b - a));
+    const oc = t => 1 - Math.pow(1 - t, 3), ob = (t, s = 2.2) => 1 + (s + 1) * Math.pow(t - 1, 3) + s * Math.pow(t - 1, 2);
+    const icc = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const finish = fast => {
+      if (done) return; done = true; cancelAnimationFrame(raf);
+      try { localStorage.setItem('tkc-intro-seen', '1'); } catch (e) {}
+      intro.style.transitionDuration = fast ? '.3s' : '.45s'; intro.style.opacity = '0';
+      root.classList.remove('intro');
+      setTimeout(() => { intro.style.display = 'none'; intro.style.opacity = ''; }, fast ? 320 : 470);
+    };
+    intro.style.display = 'block'; intro.style.opacity = '1';
+    const skip = intro.querySelector('.skip');
+    skip.onclick = () => finish(true);
+    const onKey = e => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { finish(true); removeEventListener('keydown', onKey); } };
+    addEventListener('keydown', onKey);
+    const frame = now => {
+      if (start === null) start = now;
+      const t = (now - start) / 1000, dpr = Math.min(2, devicePixelRatio || 1);
+      const w = innerWidth, h = innerHeight;
+      if (ic.width !== Math.round(w * dpr)) { ic.width = Math.round(w * dpr); ic.height = Math.round(h * dpr); }
+      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      g.fillStyle = '#161411'; g.fillRect(0, 0, w, h);
+      const cx = w / 2, cy = h / 2;
+      // the room lights up
+      const lit = oc(Pt(t, .7, 1.4));
+      if (lit > 0) {
+        const R = Math.hypot(w, h) * (.25 + .5 * lit), gr = g.createRadialGradient(cx, cy, 0, cx, cy, R);
+        gr.addColorStop(0, `rgba(255,200,121,${.22 * lit})`); gr.addColorStop(.5, `rgba(80,66,50,${.5 * lit})`); gr.addColorStop(1, 'rgba(52,49,44,0)');
+        g.fillStyle = gr; g.fillRect(0, 0, w, h);
+      }
+      // wordmark geometry
+      const fs = Math.min(w * .1, 76), fontOk = document.fonts.check(`900 ${fs}px Outfit`);
+      g.font = `900 ${fs}px Outfit, sans-serif`; g.letterSpacing = `${-fs * .05}px`; g.textBaseline = 'alphabetic';
+      const wl = g.measureText('tkc').width, wr = g.measureText('works').width, hm = g.measureText('-');
+      const hw = hm.actualBoundingBoxRight + hm.actualBoundingBoxLeft, hh = hm.actualBoundingBoxAscent + hm.actualBoundingBoxDescent;
+      const gap = fs * .06, total = wl + gap + hw + gap + wr, x0 = cx - total / 2, base = cy + fs * .36;
+      const hx = x0 + wl + gap + hw / 2, hy = base - (hm.actualBoundingBoxAscent - hm.actualBoundingBoxDescent) / 2;
+      // the bulb: pop, flicker, then glide into the hyphen
+      const out = 1 - Pt(t, 1.4, 1.65);
+      const fl = (t < .25 ? 1 : t < .75 ? [1, .15, 1, .3, .9, .2, 1, 1][Math.floor((t - .25) / .0625)] : 1) * out;
+      const mv = icc(Pt(t, .75, 1.0)), mo = ob(Pt(t, .85, 1.1));
+      const r = 11 * ob(Pt(t, 0, .25), 2.6);
+      const dx = cx + (hx - cx) * mv, dy = cy + (hy - cy) * mv;
+      const bw = fontOk ? 2 * r + (hw - 2 * r) * mo : 2 * r, bh = fontOk ? 2 * r + (hh - 2 * r) * cl(mo) : 2 * r;
+      if (r > 0) {
+        const halo = g.createRadialGradient(dx, dy, 0, dx, dy, 160);
+        halo.addColorStop(0, `rgba(255,200,121,${.45 * fl})`); halo.addColorStop(1, 'rgba(255,200,121,0)');
+        g.fillStyle = halo; g.fillRect(dx - 160, dy - 160, 320, 320);
+        g.save(); g.globalAlpha = fl; g.shadowColor = 'rgba(255,190,100,.95)'; g.shadowBlur = 30;
+        g.fillStyle = '#FFC879'; g.beginPath(); g.roundRect(dx - bw / 2, dy - bh / 2, bw, bh, Math.min(bw, bh) / 2 * (1 - cl(mo) * .7)); g.fill(); g.restore();
+      }
+      // tkc / works emerge from the light
+      if (fontOk) {
+        const e = oc(Pt(t, .92, 1.4));
+        if (e > 0 && out > 0) {
+          g.globalAlpha = out;
+          g.fillStyle = '#F6F0E6';
+          g.save(); g.beginPath(); g.rect(0, 0, hx - hw / 2 - gap * .5, h); g.clip(); g.globalAlpha = e * out;
+          g.fillText('tkc', x0 + (1 - e) * (wl * .9), base); g.restore();
+          g.save(); g.beginPath(); g.rect(hx + hw / 2 + gap * .5, 0, w, h); g.clip(); g.globalAlpha = e * out;
+          g.fillText('works', x0 + wl + gap + hw + gap - (1 - e) * (wr * .9), base); g.restore();
+          g.globalAlpha = 1;
+        }
+      }
+      if (t >= D) { finish(false); return; }
+      if (t > 1.6) intro.style.opacity = String(1 - Pt(t, 1.6, D) * .2);
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+  }
+  if (root.classList.contains('intro')) playIntro();
+  document.getElementById('replay').addEventListener('click', () => {
+    if (reduce) return;
+    scrollTo({ top: 0, behavior: 'instant' }); root.classList.add('intro'); playIntro();
+  });
+
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
 })();
 </script>
