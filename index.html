@@ -301,6 +301,7 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
   .tag-float.t1 { left: -2%; top: 30%; }
   .tag-float.t2 { right: -3%; top: 54%; animation-delay: -2s; }
   .tag-float.t3 { left: 6%; bottom: 10%; animation-delay: -4s; }
+  .tag-float.t4 { right: 2%; top: 9%; animation-delay: -6s; }
   @keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
   .scroll-cue {
     position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%);
@@ -337,7 +338,7 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
   .js .reveal.in { opacity: 1; transform: none; }
 
   /* ── apps (floor guide) ── */
-  .apps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  .apps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
   .app {
     --tx: 0deg; --ty: 0deg; --gx: 50%; --gy: 0%;
     position: relative; border-radius: 26px; padding: 26px; overflow: hidden;
@@ -390,6 +391,11 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
   }
   .store a:hover { background: var(--lamp); transform: translateY(-2px); }
   .store svg { width: 15px; height: 15px; }
+  .soon {
+    display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px;
+    border: 1px dashed var(--brass); color: var(--brass); font-weight: 700; font-size: .8rem; letter-spacing: .06em;
+  }
+  .soon b { font-family: var(--font-en); font-weight: 800; letter-spacing: .14em; }
   .sub { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line); }
   .sub a { color: var(--dim); font-size: .78rem; text-decoration: none; transition: color .3s; }
   .sub a:hover { color: var(--lamp); }
@@ -505,6 +511,7 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
     .tag-float img { width: 26px; height: 26px; }
     .tag-float.t2 { right: 0; }
     .tag-float.t1 { left: 0; }
+    .tag-float.t4 { right: 0; top: 4%; }
     .stats { grid-template-columns: 1fr 1fr 1fr; }
     .stat { padding: 18px 12px; }
     .play { font-size: .8rem; gap: 9px; padding: 6px 14px 6px 6px; }
@@ -565,6 +572,7 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
         <a class="tag-float t1" href="#shinobase-talk" aria-label="しのばせトークの紹介へ移動"><img src="assets/shinobase-talk-icon.png" alt=""><span><small>NOW ON SALE</small>しのばせトーク</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></a>
         <a class="tag-float t2" href="#oekaki-tanteidan" aria-label="おえかき探偵団の紹介へ移動"><img src="assets/oekaki-tanteidan-icon.png" alt=""><span><small>NOW ON SALE</small>おえかき探偵団</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></a>
         <a class="tag-float t3" href="#noboruhito" aria-label="のぼるひとの紹介へ移動"><img src="assets/noboruhito-icon.png" alt=""><span><small>NOW ON SALE</small>のぼるひと</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></a>
+        <a class="tag-float t4" href="#ouchi-rule" aria-label="おうちルールの紹介へ移動"><img src="assets/ouchi-rule-icon.png" alt=""><span><small>COMING SOON</small>おうちルール</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></a>
       </div>
     </div>
     <div class="scroll-cue" aria-hidden="true">SCROLL<i></i></div>
@@ -600,7 +608,7 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
         <p class="sec-label reveal">FLOOR GUIDE</p>
         <h2 class="sec-title reveal" style="--d:1">Apps</h2>
       </div>
-      <p class="sec-note reveal" style="--d:2">tkc-works のアトリエでつくったアプリたち。iOS と Android で配信中です。</p>
+      <p class="sec-note reveal" style="--d:2">tkc-works のアトリエでつくったアプリたち。iOS と Android で配信中です（おうちルールは近日公開）。</p>
     </div>
 
     <div class="apps">
@@ -638,6 +646,17 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
           <a href="https://play.google.com/store/apps/details?id=com.tkcworks.noboruhito"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"/></svg>Google Play</a>
         </div>
         <div class="sub"><a href="noboruhito-pages/privacy-policy.html">プライバシーポリシー</a><a href="noboruhito-pages/support.html">サポート</a></div>
+      </article>
+
+      <article class="app reveal" id="ouchi-rule" style="--d:3">
+        <div class="floor">FLOOR <b>No.04</b></div>
+        <div class="icon-wrap"><img src="assets/ouchi-rule-icon.png" alt="おうちルール アイコン" width="112" height="112" loading="lazy"></div>
+        <h3>おうちルール</h3>
+        <p>家のルールと毎日のやるべきことを習慣にする、親子のおこづかい帳</p>
+        <div class="store">
+          <span class="soon"><b>COMING SOON</b>近日公開</span>
+        </div>
+        <div class="sub"><a href="ouchi-rule-pages/privacy-policy.html">プライバシーポリシー</a><a href="ouchi-rule-pages/terms.html">利用規約</a><a href="ouchi-rule-pages/support.html">サポート</a></div>
       </article>
     </div>
   </section>
