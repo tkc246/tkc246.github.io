@@ -5,12 +5,12 @@
 <meta name="google-site-verification" content="nAPYq7e2Eg3ZDJLAGw2D-9kq1VA1FuMyvnGW62iUITM" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>tkc-works — つくることで、もっと楽しく。</title>
-<meta name="description" content="tkc-works はスマホで遊べるパーティーゲームやカジュアルゲームをつくっています。しのばせトーク、おえかき探偵団、のぼるひとを配信中。">
+<meta name="description" content="tkc-works は、みんなで遊べるゲームや毎日に役立つスマホアプリをつくっています。しのばせトーク、おえかき探偵団、のぼるひとを配信中。">
 <link rel="canonical" href="https://tkc-works.net/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="tkc-works">
 <meta property="og:title" content="tkc-works — つくることで、もっと楽しく。">
-<meta property="og:description" content="tkc-works はスマホで遊べるパーティーゲームやカジュアルゲームをつくっています。">
+<meta property="og:description" content="tkc-works は、みんなで遊べるゲームや毎日に役立つスマホアプリをつくっています。">
 <meta property="og:url" content="https://tkc-works.net/">
 <meta property="og:image" content="https://tkc-works.net/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="tkc-works — つくることで、もっと楽しく。">
-<meta name="twitter:description" content="tkc-works はスマホで遊べるパーティーゲームやカジュアルゲームをつくっています。">
+<meta name="twitter:description" content="tkc-works は、みんなで遊べるゲームや毎日に役立つスマホアプリをつくっています。">
 <meta name="twitter:image" content="https://tkc-works.net/assets/og-image.jpg">
 <meta name="twitter:image:alt" content="tkc-works のアトリエを再現したミニチュアのジオラマ">
 <meta name="theme-color" content="#2E2B27">
@@ -548,7 +548,7 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
       <p class="eyebrow"><span class="rule"></span>APP DEVELOPMENT · SINCE 2026</p>
       <h1 class="wordmark" aria-label="tkc-works">tkc-works</h1>
       <p class="catch" aria-label="つくることで、もっと楽しく。">つくることで、もっと楽しく。</p>
-      <p class="lead">スマホひとつで、みんなが笑える時間を。<br>tkc-works は、パーティーゲームやカジュアルゲームを企画・開発しています。</p>
+      <p class="lead">スマホひとつで、みんなが笑える時間を。<br>tkc-works は、みんなで遊べるゲームや毎日に役立つアプリを企画・開発しています。</p>
       <div class="cta">
         <a class="btn primary magnetic" href="#apps">アプリを見る<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a class="btn ghost magnetic" href="#contact">お問い合わせ</a>
@@ -665,11 +665,11 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
     <div class="about">
       <div>
         <p class="sec-label reveal">ABOUT</p>
-        <p class="statement" id="statement">小さなアトリエから、みんなで遊べる「楽しい」を、ひとつずつ。</p>
+        <p class="statement" id="statement">小さなアトリエから、毎日の「楽しい」を、ひとつずつ。</p>
       </div>
       <div class="about-body">
-        <p class="reveal">tkc-works は、スマホで遊べるアプリをつくっています。<br>友だちや家族と同じ画面をのぞき込んで、思わず声が出る。そんな時間が生まれるゲームを目指しています。</p>
-        <p class="reveal" style="--d:1">企画から、デザイン、開発、リリース後のサポートまで。つくることそのものを楽しみながら、遊ぶ人の毎日を、もっと楽しく。</p>
+        <p class="reveal">tkc-works は、スマホアプリをつくっています。<br>友だちや家族と同じ画面をのぞき込んで、思わず笑顔になる。そんな時間が生まれるアプリを目指しています。</p>
+        <p class="reveal" style="--d:1">企画から、デザイン、開発、リリース後のサポートまで。つくることそのものを楽しみながら、使う人の毎日を、もっと楽しく。</p>
         <div class="stats reveal" style="--d:2">
           <div class="stat"><div class="n"><span data-count="3" data-pad="2">00</span></div><div class="l">APPS</div></div>
           <div class="stat"><div class="n"><span data-count="2" data-pad="2">00</span></div><div class="l">PLATFORMS</div></div>
@@ -802,7 +802,7 @@ try { if (!localStorage.getItem('tkc-intro-seen') && !matchMedia('(prefers-reduc
 
   // statement lights up word by word as you scroll
   const st = document.getElementById('statement');
-  const words = ['小さな', 'アトリエ', 'から、', 'みんなで', '遊べる', '「楽しい」', 'を、', 'ひとつずつ。'];
+  const words = ['小さな', 'アトリエ', 'から、', '毎日の', '「楽しい」', 'を、', 'ひとつずつ。'];
   const hl = new Set(['「楽しい」']);
   st.textContent = '';
   words.forEach(w => { const s = document.createElement('span'); s.className = 'w' + (hl.has(w) ? ' hl' : ''); s.textContent = w; st.appendChild(s); });
