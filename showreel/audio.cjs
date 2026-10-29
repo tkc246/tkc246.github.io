@@ -1,6 +1,11 @@
 // Procedural soundtrack, 120 BPM, synced to the reel's timeline. Writes reel.wav (48k stereo 16-bit).
 const fs = require('fs');
-const SR = 48000, DUR = 17, N = SR * DUR;
+// v3.1: each app scene is HOLD s longer (same value as reel.js). Cues are written on the v3 (17 s) timeline and
+// warped by S(); the groove is laid out directly on the new timeline.
+const HOLD = 1;
+const S = t => t + HOLD * (t < 5.6 ? 0 : t < 7.65 ? 1 : t < 9.65 ? 2 : t < 11.7 ? 3 : 4);
+let WARP = true;
+const SR = 48000, DUR = 17 + 4 * HOLD, N = SR * DUR;
 const L = new Float32Array(N), R = new Float32Array(N);
 const SL = new Float32Array(N), SR_ = new Float32Array(N); // reverb send
 let seed = 12345; const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
@@ -8,7 +13,7 @@ const TAU = Math.PI * 2;
 const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
 
 function put(t0, len, fn, { gain = 1, pan = 0, send = 0 } = {}) {
-  const s0 = Math.floor(t0 * SR), n = Math.floor(len * SR);
+  const s0 = Math.floor((WARP ? S(t0) : t0) * SR), n = Math.floor(len * SR);
   const gl = gain * Math.cos((pan + 1) * Math.PI / 4), gr = gain * Math.sin((pan + 1) * Math.PI / 4);
   const st = {};
   for (let i = 0; i < n; i++) {
@@ -88,21 +93,23 @@ for (let i = 0; i < 6; i++) tick(.55 + i * .045, .8, -.5 + i * .2, 2200 + i * 15
 kick(1.0, .9); clap(1.0, .8); bass(1.0, .45, 33);
 for (let i = 0; i < 6; i++) tick(1.0 + i * .045, .7, .5 - i * .2, 1800 - i * 100);
 riser(1.2, .8, 1.1);
-// GROOVE 2.0 → 14.0 (v3: おうちルールの小節 E を足して、ATELIER の A に解決させる)
-const roots = [45, 41, 36, 43, 40, 45];     // A F C G E A (bars of 2s)
+// GROOVE 2.0 → 14.0 + 4·HOLD (v3: おうちルールの小節 E を足して、ATELIER の A に解決させる。v3.1: アプリの場面は 2 + HOLD 秒)
+const roots = [45, 41, 36, 43, 40, 45];     // A F C G E A — one chord per scene: concept, 4 apps, atelier
 const chords = [[57, 60, 64, 67], [53, 57, 60, 64], [48, 55, 60, 64], [55, 59, 62, 67], [52, 56, 59, 62], [57, 60, 64, 69]];
+const segs = [2, 2 + HOLD, 2 + HOLD, 2 + HOLD, 2 + HOLD, 2];
 boom(2.0, .8);
-for (let bar = 0; bar < 6; bar++) {
-  const t0 = 2 + bar * 2;
-  pad(t0, 2.05, chords[bar], 1);
-  for (let b = 0; b < 4; b++) {
+WARP = false;
+for (let k = 0, t0 = 2; k < segs.length; t0 += segs[k], k++) {
+  pad(t0, segs[k] + .05, chords[k], 1);
+  for (let b = 0; b < segs[k] / B; b++) {
     const tb = t0 + b * B;
     kick(tb);
     if (b % 2 === 1) clap(tb);
-    for (let s = 0; s < 4; s++) hat(tb + s * B / 4, s === 2 ? 1 : .45, s === 2 && b === 3);
-    bass(tb, .22, roots[bar] - 12 + (b === 3 ? 7 : 0)); bass(tb + .25, .2, roots[bar] - (b % 2 ? 0 : 12));
+    for (let s = 0; s < 4; s++) hat(tb + s * B / 4, s === 2 ? 1 : .45, s === 2 && b % 4 === 3);
+    bass(tb, .22, roots[k] - 12 + (b % 4 === 3 ? 7 : 0)); bass(tb + .25, .2, roots[k] - (b % 2 ? 0 : 12));
   }
 }
+WARP = true;
 // kinetic type stabs (pentatonic climb)
 [69, 72, 74, 76, 79, 81, 84, 72, 74, 76, 79, 81, 84, 88].forEach((m, i) => { const t = i < 7 ? 2.0 + i * .09 : 2.75 + (i - 7) * .09; pluck(t, m, .9, (i % 2 ? .4 : -.4)); pluck(t, m - 12, .45); });
 for (let i = 0; i < 38; i++) tick(3.3 + i * .011, .22, .3, 4000); // typing
@@ -116,6 +123,7 @@ chip(8.0, .3, 220, 880, 1.2);  // jump
 kick(8.58, .5); chip(8.58, .08, 140, 80, 1);   // land
 chip(9.12, .28, 330, 990, .9); chip(9.5, .08, 160, 90, .8);
 for (let i = 0; i < 12; i++) chip(8.2 + i * .14, .04, 1400 + (i % 3) * 300, 1600, .25); // altimeter
+WARP = false; chip(8 + 2 * HOLD + 2.12, .3, 330, 1100, .9); chip(8 + 2 * HOLD + 2.5, .08, 160, 90, .8); WARP = true; // v3.1: the extra hop
 whoosh(9.68, .45, 1.3, true); boom(10.1, .35);
 // おうちルール (10–12): the icon falls and is pressed like a hanko, the name is stamped char by char,
 // 「よくできました」, the balance counts up in coins, then the passbook rows slide in

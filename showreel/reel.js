@@ -3,7 +3,9 @@
 // 17s / 1920x1080 / 60fps. Fully deterministic: render(t) is a pure function of time.
 // World: the renewed tkc-works.net — a dark atelier lit by warm lamps, brass plates, cream type.
 // v3: FLOOR No.04 おうちルール (10–12s) を追加。ATELIER 以降は 2 秒うしろへ（s6 / endCard には t - 2 を渡す）
-const W = 1920, H = 1080, FPS = 60, DUR = 17, CX = W / 2, CY = H / 2, TAU = Math.PI * 2;
+// v3.1: 各アプリの場面を HOLD 秒ずつ長くした（render() の時間割を参照）。HOLD は 0.5 の倍数にする（音楽の 1 拍＝0.5 秒に合わせる）
+const HOLD = 1;
+const W = 1920, H = 1080, FPS = 60, DUR = 17 + 4 * HOLD, CX = W / 2, CY = H / 2, TAU = Math.PI * 2;
 const QS = new URLSearchParams(location.search);
 const SUB = +(QS.get('sub') || 5);      // motion-blur sub-samples
 const SHUTTER = 0.5;                    // 180° shutter
@@ -360,7 +362,7 @@ function app1(c, t) {
   words(.05, COL.fg);
   floorCard(c, u);
   // magnifier sweeping the bottom: hidden words glow inside the lens
-  const lp = clamp((u + .1) / 2.1);
+  const lp = clamp((u + .1) / (2.1 + HOLD));
   const lx = 1780 - 1500 * E.inOutSine(lp), ly = 960 + 30 * Math.sin(u * 4.2), LR = 130;
   c.save(); c.beginPath(); c.arc(lx, ly, LR, 0, TAU); c.fillStyle = 'rgba(255,214,160,.08)'; c.fill(); c.clip();
   lampGlow(c, lx, ly, LR, .25); words(.85, COL.lamp, true, lx, ly); c.restore();
@@ -459,7 +461,7 @@ const pxCanvas = mk(128, 128), pxCtx = pxCanvas.getContext('2d');
 function app3(c, t) {
   const u = t - 8, uq = Math.floor(u * 12) / 12;
   atelierBg(c, CX, -H * .2, 1.2);
-  const climb = 1700 * E.inOutCubic(P(u, -.3, 2.1)) + u * 90;
+  const climb = 1700 * E.inOutCubic(P(u, -.3, 2.1 + HOLD)) + u * 90;
   c.fillStyle = 'rgba(255,236,210,0.06)';
   for (const cl of CLOUDS) {
     const y = ((cl.y + climb * cl.sp) % (H + 300)) - 150;
@@ -483,7 +485,7 @@ function app3(c, t) {
   c.fillStyle = 'rgba(0,0,0,.45)'; c.fillRect(90, 0, 8, H); c.fillRect(W - 98, 0, 8, H);
   floorCard(c, u);
   // altitude meter
-  const alt = Math.floor(1280 * E.inOutCubic(P(u, 0, 1.8)));
+  const alt = Math.floor(1280 * E.inOutCubic(P(u, 0, 1.8 + HOLD * .6)));
   setFont(c, 400, 42, FT.dot, 2); c.textAlign = 'right'; c.fillStyle = COL.lamp;
   c.fillText(`▲ ${String(alt).padStart(4, '0')} m`, 1700, 262); c.textAlign = 'left';
   c.fillStyle = COL.line; c.fillRect(1700 - 230, 280, 230, 6);
@@ -495,11 +497,14 @@ function app3(c, t) {
   else if (uq < .84) { const p = (uq - .58) / .26, s = Math.sin(p * Math.PI) * (1 - p * .3); sy = 1 - .17 * s; sx = 1 + .13 * s; }
   else if (uq >= 1.12 && uq < 1.5) { const p = (uq - 1.12) / .38; y = -120 * Math.sin(p * Math.PI); sy = 1 + .07 * Math.cos(p * TAU); sx = 2 - sy; }
   else if (uq >= 1.5 && uq < 1.7) { const p = (uq - 1.5) / .2, s = Math.sin(p * Math.PI); sy = 1 - .12 * s; sx = 1 + .1 * s; }
+  // v3.1: one more hop in the held time
+  else if (HOLD && uq >= 2.12 && uq < 2.5) { const p = (uq - 2.12) / .38; y = -150 * Math.sin(p * Math.PI); sy = 1 + .07 * Math.cos(p * TAU); sx = 2 - sy; }
+  else if (HOLD && uq >= 2.5 && uq < 2.7) { const p = (uq - 2.5) / .2, s = Math.sin(p * Math.PI); sy = 1 - .12 * s; sx = 1 + .1 * s; }
   const SZ = 420, cx = 500, ground = 560 + SZ / 2;
   lampGlow(c, cx, ground - SZ / 2, 420, .14);
   const sh = clamp(1 + Math.min(0, y) / 300) * clamp((.5 - uq) < 0 ? 1 : uq / .5);
   c.fillStyle = `rgba(0,0,0,${.45 * sh})`; c.beginPath(); c.ellipse(cx, ground + 36, 210 * sh * sx, 22 * sh, 0, 0, TAU); c.fill();
-  for (const [t0, t1] of [[.58, .95], [1.5, 1.85]]) {
+  for (const [t0, t1] of [[.58, .95], [1.5, 1.85], [2.5, 2.85]]) {
     const p = P(uq, t0, t1); if (p <= 0 || p >= 1) continue;
     c.fillStyle = `rgba(255,214,160,${1 - p})`;
     for (let i = 0; i < 6; i++) { const d = (i % 3 + 1) * 66 * E.outCubic(p), side = i < 3 ? -1 : 1; const s = 20 - p * 13;
@@ -565,7 +570,7 @@ function app4(c, t) {
   });
   floorCard(c, u);
   // balance meter (top right), counting up like the altimeter on FLOOR No.03
-  const bal = Math.round(1280 * E.inOutCubic(P(u, .3, 1.7)) / 10) * 10;
+  const bal = Math.round(1280 * E.inOutCubic(P(u, .3, 1.7 + HOLD * .6)) / 10) * 10;
   c.textAlign = 'right';
   setFont(c, 800, 46, FT.en, 1); c.fillStyle = COL.lamp; const vs = `¥${bal.toLocaleString('en-US')}`; c.fillText(vs, 1700, 262);
   setFont(c, 700, 24, FT.jp, 4); c.fillStyle = COL.dim; c.fillText('ざんだか', 1700 - c.measureText(vs).width - 64, 258);
@@ -757,39 +762,42 @@ function ledgerWipe(c, t) {
   c.restore();
 }
 
+// v3.1: each app scene holds HOLD seconds longer. The scene functions keep their original timings,
+// so every scene after app k is drawn at (t - k * HOLD); transitions get the time of the scene they lead into.
 function render(c, t) {
+  const t1 = t - HOLD, t2 = t - 2 * HOLD, t3 = t - 3 * HOLD, t4 = t - 4 * HOLD;
   c.save();
   if (t < 2) s1(c, t);
   else if (t < 3.92) { s2(c, t); if (t >= 3.6) barsCover(c, t); }
-  else if (t < 5.65) { app1(c, t); if (t < 4.3) barsUncover(c, t); }
-  else if (t < 6.05) { app1(c, t); scribbleWipe(c, t); }
-  else if (t < 7.7) app2(c, t);
-  else if (t < 8.12) { app2(c, t); pixelDissolve(c, t); }
-  else if (t < 9.75) app3(c, t);
-  else if (t < 10.12) {
-    const o = H * E.inOutExpo(P(t, 9.75, 10.12));
-    c.save(); c.translate(0, o); app3(c, t); c.restore();
-    c.save(); c.translate(0, o - H); app4(c, t); c.restore();
+  else if (t1 < 5.65) { app1(c, t); if (t < 4.3) barsUncover(c, t); }
+  else if (t1 < 6.05) { app1(c, t); scribbleWipe(c, t1); }
+  else if (t2 < 7.7) app2(c, t1);
+  else if (t2 < 8.12) { app2(c, t1); pixelDissolve(c, t2); }
+  else if (t3 < 9.75) app3(c, t2);
+  else if (t3 < 10.12) {
+    const o = H * E.inOutExpo(P(t3, 9.75, 10.12));
+    c.save(); c.translate(0, o); app3(c, t2); c.restore();
+    c.save(); c.translate(0, o - H); app4(c, t3); c.restore();
   }
-  else if (t < 11.72) app4(c, t);
-  else if (t < 12.16) { app4(c, t); ledgerWipe(c, t); }
-  else if (t < 14.36) s6(c, t - 2);
-  else if (t < 14.72) {
-    s6(c, t - 2);
-    const r = 1150 * E.outExpo(P(t, 14.36, 14.72));
-    c.save(); c.beginPath(); c.arc(CX, CY, r, 0, TAU); c.clip(); endCard(c, t - 2); c.restore();
-    c.strokeStyle = `rgba(255,200,121,${.6 * (1 - P(t, 14.36, 14.72))})`; c.lineWidth = 3; c.beginPath(); c.arc(CX, CY, r, 0, TAU); c.stroke();
+  else if (t4 < 11.72) app4(c, t3);
+  else if (t4 < 12.16) { app4(c, t3); ledgerWipe(c, t4); }
+  else if (t4 < 14.36) s6(c, t4 - 2);
+  else if (t4 < 14.72) {
+    s6(c, t4 - 2);
+    const r = 1150 * E.outExpo(P(t4, 14.36, 14.72));
+    c.save(); c.beginPath(); c.arc(CX, CY, r, 0, TAU); c.clip(); endCard(c, t4 - 2); c.restore();
+    c.strokeStyle = `rgba(255,200,121,${.6 * (1 - P(t4, 14.36, 14.72))})`; c.lineWidth = 3; c.beginPath(); c.arc(CX, CY, r, 0, TAU); c.stroke();
   }
-  else endCard(c, t - 2);
-  if (t >= 2 && t < 12) dust(c, t, .7);
+  else endCard(c, t4 - 2);
+  if (t >= 2 && t4 < 12) dust(c, t, .7);
   c.restore();
 }
 
 // ───────── HUD (drawn sharp, after motion blur) ─────────
-const SCENES = [[0, '00 — LIGHTS ON'], [2, '01 — CONCEPT'], [3.92, '02 — FLOOR No.01 / しのばせトーク'], [6.05, '03 — FLOOR No.02 / おえかき探偵団'],
-  [8.12, '04 — FLOOR No.03 / のぼるひと'], [10.0, '05 — FLOOR No.04 / おうちルール'], [12.0, '06 — ATELIER'], [14.5, '']];
+const SCENES = [[0, '00 — LIGHTS ON'], [2, '01 — CONCEPT'], [3.92, '02 — FLOOR No.01 / しのばせトーク'], [6.05 + HOLD, '03 — FLOOR No.02 / おえかき探偵団'],
+  [8.12 + 2 * HOLD, '04 — FLOOR No.03 / のぼるひと'], [10.0 + 3 * HOLD, '05 — FLOOR No.04 / おうちルール'], [12.0 + 4 * HOLD, '06 — ATELIER'], [14.5 + 4 * HOLD, '']];
 function hud(c, t, f) {
-  const a = .75 * E.outCubic(P(t, .45, .8)), fade = 1 - P(t, 14.4, 14.7);
+  const a = .75 * E.outCubic(P(t, .45, .8)), fade = 1 - P(t, 14.4 + 4 * HOLD, 14.7 + 4 * HOLD);
   const M = 56, Lb = 30;
   c.save(); c.strokeStyle = `rgba(205,168,98,${a * .6})`; c.lineWidth = 2; c.beginPath();
   for (const [x, y, sx, sy] of [[M, M, 1, 1], [W - M, M, -1, 1], [M, H - M, 1, -1], [W - M, H - M, -1, -1]]) {
